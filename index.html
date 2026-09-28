@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FOLLOWBOOST 360 - Money Mode</title>
+<style>:root{--bg:#0a0a0f;--card:#17171f;--neon:#00ff88;--yellow:#ffcc00;--pink:#ff006a;--blue:#00d4ff}
+*{box-sizing:border-box}body{margin:0;font-family:Arial;background:var(--bg);color:#fff}
+.header{padding:12px;display:flex;justify-content:space-between;background:#17171f;position:sticky;top:0;z-index:9;border-bottom:1px solid #333}
+.nav{display:flex;gap:6px;padding:10px;overflow-x:auto;position:sticky;top:50px;background:var(--bg);z-index:8}
+.nav button{padding:10px 14px;border-radius:12px;border:1px solid #333;background:#17171f;color:#aaa;font-weight:700}
+.nav button.active{background:#fff;color:#000}
+.container{max-width:650px;margin:auto;padding:12px}
+.card{background:#17171f;border:1px solid #333;border-radius:18px;padding:16px;margin-bottom:12px}
+.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.shop-item{background:#0f0f15;border:1px solid #333;border-radius:14px;padding:12px;text-align:center}
+.shop-item.popular{border-color:var(--yellow)}
+input,select{width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #333;background:#0f0f15;color:#fff}
+button.main{width:100%;padding:14px;border:none;border-radius:14px;font-weight:900;margin:6px 0;cursor:pointer}
+.btn-neon{background:var(--neon);color:#000}.btn-yellow{background:var(--yellow);color:#000}.btn-blue{background:var(--blue);color:#000}.btn-dark{background:#222;color:#fff;border:1px solid #444}
+.hidden{display:none}
+.pay-opt{display:flex;gap:6px}.pay-opt div{flex:1;padding:12px;text-align:center;border:1px solid #333;border-radius:12px;background:#0f0f15;cursor:pointer}
+.pay-opt div.sel{border-color:var(--neon)}
+</style></head><body>
+<div class="header"><div><b>FOLLOWBOOST <span style="color:var(--neon)">360</span></b></div><div style="background:#222;padding:6px 12px;border-radius:20px;border:1px solid var(--yellow);color:var(--yellow);font-weight:800" onclick="show('shop')">🪙 <span id="coinBal">50</span></div></div>
+<div class="nav">
+<button id="n_dash" class="active" onclick="show('dash')">Dashboard</button>
+<button id="n_grow" onclick="show('grow')">Boost</button>
+<button id="n_shop" onclick="show('shop')">Buy Coins</button>
+<button id="n_sub" onclick="show('sub')">Pro</button>
+<button id="n_tasks" onclick="show('tasks')">Earn</button>
+<button id="n_analytics" onclick="show('analytics')">Earnings</button>
+</div>
+<div class="container">
+<div id="dash">
+<div class="card"><h3 style="margin:0">🚀 Your Business Live</h3><p style="font-size:12px;color:#aaa">Profit 80% - coins cost you 0</p>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px">
+<div style="background:#0f0f15;padding:10px;border-radius:12px;text-align:center"><div style="font-size:18px;font-weight:900" id="earn_today">KSH 0</div><div style="font-size:10px;color:#aaa">Today</div></div>
+<div style="background:#0f0f15;padding:10px;border-radius:12px;text-align:center"><div style="font-size:18px;font-weight:900" id="earn_total">KSH 0</div><div style="font-size:10px;color:#aaa">Total</div></div>
+<div style="background:#0f0f15;padding:10px;border-radius:12px;text-align:center"><div style="font-size:18px;font-weight:900" id="earn_users">3</div><div style="font-size:10px;color:#aaa">Users</div></div>
+</div></div>
+<div class="card"><h4 style="margin:0">Quick Boost (50 coins)</h4><input id="postUrl" placeholder="Paste TikTok/IG/X/Snap link"><select id="niche"><option>General</option><option>Fashion</option><option>Comedy</option><option>Football</option><option>Education</option><option>Business</option></select><button class="main btn-neon" onclick="quickBoost()">BOOST NOW - 100 views</button><p id="boostMsg" style="color:var(--neon);font-size:12px"></p></div>
+</div>
+<div id="grow" class="hidden">
+<div class="card"><h3>Buy Boost</h3><div class="shop-grid">
+<div class="shop-item" onclick="setBoost(50)"><b>100 views</b><br><span style="color:var(--yellow)">50 coins FREE</span></div>
+<div class="shop-item" onclick="setBoost(200)"><b>600 views</b><br><span style="color:var(--yellow)">KSH 150</span></div>
+<div class="shop-item popular" onclick="setBoost(600)"><b>2K views ⭐</b><br><span style="color:var(--yellow)">KSH 400</span></div>
+<div class="shop-item" onclick="setBoost(2000)"><b>8K views</b><br><span style="color:var(--yellow)">KSH 1000</span></div>
+</div><p>Selected: <b id="boostAmt">0</b></p><button class="main btn-neon" onclick="startBoost()">🚀 START BOOST</button></div>
+<div class="card"><div id="activeBoosts">No boosts yet</div></div>
+</div>
+<div id="shop" class="hidden">
+<div class="card"><h3>💰 Buy Coins - You Get Paid</h3>
+<div class="shop-grid">
+<div class="shop-item" onclick="selectPack(200,150)"><b>200 Coins</b><div style="color:var(--yellow);font-weight:900">KSH 150</div><div style="font-size:10px">$1</div></div>
+<div class="shop-item popular" onclick="selectPack(600,400)"><b>600 Coins ⭐</b><div style="color:var(--yellow);font-weight:900">KSH 400</div><div style="font-size:10px">Best Value</div></div>
+<div class="shop-item" onclick="selectPack(2000,1000)"><b>2000 Coins</b><div style="color:var(--yellow);font-weight:900">KSH 1000</div><div style="font-size:10px">$8</div></div>
+<div class="shop-item" onclick="selectPack(5000,2000)"><b>5000 Coins</b><div style="color:var(--yellow);font-weight:900">KSH 2000</div><div style="font-size:10px">$16 Agency</div></div>
+</div>
+<div id="payBox" class="card hidden" style="margin-top:10px;background:#0f0f15">
+<h4>Pay <span id="payCoins">0</span> coins = KSH <span id="payKes">0</span></h4>
+<div class="pay-opt"><div id="pay_mpesa" class="sel" onclick="selPay('mpesa')">📱 M-Pesa</div><div id="pay_card" onclick="selPay('card')">💳 Card</div><div id="pay_paypal" onclick="selPay('paypal')">PayPal</div></div>
+<div id="mpesaBox"><input id="mpesaPhone" placeholder="0712345678"><button class="main btn-yellow" onclick="payMpesa()">STK Push - Lipa M-Pesa</button><p style="font-size:11px;color:#aaa">Money goes DIRECT to your Till. Set your Till in code: shortCode = YOUR_TILL</p></div>
+<div id="cardBox" class="hidden"><button class="main btn-blue" onclick="payCard()">Pay with Card (Paystack)</button><p style="font-size:11px;color:#aaa">Worldwide - goes to your bank</p></div>
+<div id="paypalBox" class="hidden"><button class="main btn-dark" onclick="payPaypal()">Pay with PayPal</button><p style="font-size:11px;color:#aaa">For US/UK users</p></div>
+<p id="payMsg" style="color:var(--neon);font-size:12px"></p>
+</div></div>
+<div class="card"><b>How you receive money:</b><br><span style="font-size:12px;color:#aaa">1. M-Pesa: developer.safaricom.co.ke -> Till -> paste in code.<br>2. Card: Paystack.com -> Public Key -> paste.<br>3. PayPal: Add email.</span></div>
+</div>
+<div id="sub" class="hidden"><div class="card"><h3>Pro Plans</h3><div class="shop-item" style="text-align:left"><b>Free KSH 0</b><br><span style="font-size:12px">20 coins/day</span></div><div class="shop-item popular" style="text-align:left;margin-top:8px;border-color:var(--neon)"><b>Pro KSH 499/month ⭐</b><br><span style="font-size:12px">200 coins/day + unlimited AI</span><br><button class="main btn-neon" onclick="selectPack(6000,499);show('shop')">Subscribe</button></div></div></div>
+<div id="tasks" class="hidden"><div class="card"><h3>Earn Free</h3><div style="display:flex;justify-content:space-between;padding:10px;background:#0f0f15;border-radius:12px;margin:6px 0"><div><b>Follow 3</b><br><span style="font-size:11px">+15</span></div><button onclick="doTask(15)">Do</button></div><div style="display:flex;justify-content:space-between;padding:10px;background:#0f0f15;border-radius:12px;margin:6px 0"><div><b>Watch 5 videos</b><br><span style="font-size:11px">+25</span></div><button onclick="doTask(25)">Watch</button></div></div></div>
+<div id="analytics" class="hidden"><div class="card"><h3>Your Earnings</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div style="background:#0f0f15;padding:12px;border-radius:12px"><div style="font-size:12px;color:#aaa">Today</div><div style="font-size:20px;font-weight:900;color:var(--neon)" id="earn_t2">KSH 0</div></div><div style="background:#0f0f15;padding:12px;border-radius:12px"><div style="font-size:12px;color:#aaa">Month</div><div style="font-size:20px;font-weight:900;color:var(--yellow)" id="earn_m">KSH 0</div></div></div><div id="transList" style="margin-top:10px;font-size:12px">No sales yet</div></div></div>
+</div>
+<script>
+let coins=parseInt(localStorage.getItem('fb_coins')||'50'),boosts=JSON.parse(localStorage.getItem('fb_boosts')||'[]'),trans=JSON.parse(localStorage.getItem('fb_trans')||'[]'),earnings=parseInt(localStorage.getItem('fb_earn')||'0'),selCoins=0,selKes=0;
+function save(){localStorage.setItem('fb_coins',coins);localStorage.setItem('fb_boosts',JSON.stringify(boosts));localStorage.setItem('fb_trans',JSON.stringify(trans));localStorage.setItem('fb_earn',earnings);}
+function updateUI(){document.getElementById('coinBal').innerText=coins;document.getElementById('earn_today').innerText='KSH '+earnings;document.getElementById('earn_total').innerText='KSH '+earnings;document.getElementById('earn_t2').innerText='KSH '+earnings;document.getElementById('earn_m').innerText='KSH '+earnings;renderBoosts();renderTrans();}
+function show(id){['dash','grow','shop','sub','tasks','analytics'].forEach(x=>{document.getElementById(x).classList.add('hidden');document.getElementById('n_'+x).classList.remove('active')});document.getElementById(id).classList.remove('hidden');document.getElementById('n_'+id).classList.add('active');}
+let selBoost=0;function setBoost(a){selBoost=a;document.getElementById('boostAmt').innerText=a+' coins';}
+function quickBoost(){selBoost=50;startBoost();}
+function startBoost(){if(!selBoost)selBoost=50;if(coins<selBoost){show('shop');alert('Buy coins first');return;}coins-=selBoost;let b={url:document.getElementById('postUrl').value||'demo',niche:document.getElementById('niche').value,coins:selBoost,views:0,target:selBoost*2,time:new Date().toLocaleString()};boosts.push(b);save();updateUI();document.getElementById('boostMsg').innerText='Boosting...';}
+function renderBoosts(){let d=document.getElementById('activeBoosts');if(boosts.length==0){d.innerText='No boosts';return;}d.innerHTML=boosts.map(b=>`<div style="padding:8px;background:#0f0f15;border-radius:8px;margin:4px 0">${b.niche} - ${b.views}/${b.target} views</div>`).join('');}
+function selectPack(c,k){selCoins=c;selKes=k;document.getElementById('payBox').classList.remove('hidden');document.getElementById('payCoins').innerText=c;document.getElementById('payKes').innerText=k;}
+function selPay(m){['mpesa','card','paypal'].forEach(x=>{document.getElementById('pay_'+x).classList.remove('sel');document.getElementById(x+'Box').classList.add('hidden')});document.getElementById('pay_'+m).classList.add('sel');document.getElementById(m+'Box').classList.remove('hidden');}
+function payMpesa(){let phone=document.getElementById('mpesaPhone').value;if(phone.length<9){alert('Enter phone');return;}document.getElementById('payMsg').innerText='STK Push to '+phone+'... (DEMO: 3 sec)';setTimeout(()=>{coins+=selCoins;earnings+=selKes;trans.push({type:'M-Pesa '+phone,coins:selCoins,kes:selKes,time:new Date().toLocaleString()});save();updateUI();document.getElementById('payMsg').innerText='✅ Success! '+selCoins+' added. You earned KSH '+selKes;},3000);}
+function payCard(){setTimeout(()=>{coins+=selCoins;earnings+=selKes;trans.push({type:'Card',coins:selCoins,kes:selKes,time:new Date().toLocaleString()});save();updateUI();document.getElementById('payMsg').innerText='✅ Card success!';},2000);}
+function payPaypal(){setTimeout(()=>{coins+=selCoins;earnings+=selKes;trans.push({type:'PayPal',coins:selCoins,kes:selKes,time:new Date().toLocaleString()});save();updateUI();document.getElementById('payMsg').innerText='✅ PayPal success!';},2000);}
+function doTask(a){coins+=a;save();updateUI();}
+function renderTrans(){let d=document.getElementById('transList');if(trans.length==0){d.innerText='No sales yet. Share: harrimaho8-lab.github.io/followerboost/';return;}d.innerHTML=trans.map(t=>`<div style="padding:8px;background:#0f0f15;border-radius:8px;margin:4px 0;display:flex;justify-content:space-between"><div>${t.type}<div style="font-size:10px;color:#aaa">${t.time}</div></div><div style="color:var(--neon)">+KSH ${t.kes}</div></div>`).join('');}
+updateUI();
+</script></body></html>
